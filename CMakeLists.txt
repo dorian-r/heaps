@@ -16,3 +16,6 @@ include_directories(heap)
 add_executable(heaps_test test/test.cpp test/test_util.h test/test_util.cpp)
 target_link_libraries(heaps_test gtest gtest_main)
 target_link_libraries(heaps_test heaps_lib)
+
+add_executable(heaps_perf test/perf_test.cpp test/timer.cpp test/timer.h test/test_util.h test/test_util.cpp)
+target_link_libraries(heaps_perf heaps_lib)

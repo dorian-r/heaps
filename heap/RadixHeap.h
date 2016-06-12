@@ -7,8 +7,6 @@
 
 class RadixHeap {
 public:
-    RadixHeap();
-    ~RadixHeap();
     void insert(const Key x);
     Key delete_min();
     size_t count() const;
@@ -19,7 +17,7 @@ private:
         Stack();
         ~Stack();
         void push(const Key x);
-        Key pop();
+        void pop();
         Key operator[](const size_t i) const;
         size_t length() const;
         void reset();
@@ -29,9 +27,9 @@ private:
         Key * arr;
     };
 
-    Stack * buckets;
+    Stack buckets [BUCKETS];
     Key key_min;
-    size_t cnt;
+    size_t cnt = 0;
 };
 
 

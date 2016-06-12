@@ -1,6 +1,5 @@
+#include <iostream>
 #include "ExtendedRadixHeap.h"
-
-ExtendedRadixHeap::ExtendedRadixHeap() : buckets(new Bucket [BUCKETS]), cnt(0) {}
 
 ExtendedRadixHeap::~ExtendedRadixHeap() {
     for (size_t i = 0; i < BUCKETS; ++i){
@@ -11,10 +10,9 @@ ExtendedRadixHeap::~ExtendedRadixHeap() {
             delete old;
         }
     }
-    delete [] buckets;
 }
 
-void ExtendedRadixHeap::insert(const Key x, ExtendedRadixHeap * & self) {
+void ExtendedRadixHeap::insert(const Key x, ExtendedRadixHeap*& self) {
     if (cnt == 0){
         key_min = x;
     }
@@ -34,10 +32,28 @@ void ExtendedRadixHeap::insert(const Key x, ExtendedRadixHeap * & self) {
 Key ExtendedRadixHeap::delete_min() {
     --cnt;
     Node * min = buckets[0].first;
-    Key old_min = key_min;
-    if (min){
+    bucket_remove(0);
+    while (min->extended){
+        ExtendedRadixHeap * heap = min->extended;
+        for (size_t i = 0; i < BUCKETS; ++i){
+            Bucket& hb = heap->buckets[i];
+            if (hb.first){
+                Bucket& b = buckets[i];
+                if (b.last){
+                    b.last->next = hb.first;
+                } else {
+                    b.first = hb.first;
+                }
+                b.last = hb.last;
+                hb.first = nullptr;
+            }
+        }
+        min = buckets[0].first;
         bucket_remove(0);
-    } else {
+    }
+    Key old_min = key_min;
+
+    if (!buckets[0].first){
         for (size_t i = 1; i < BUCKETS; ++i){
             Bucket& b = buckets[i];
             if (b.first){
@@ -59,6 +75,7 @@ Key ExtendedRadixHeap::delete_min() {
                     }
                     n = next;
                 }
+                bucket_insert(0, min);
                 b.first = nullptr;
                 b.last = nullptr;
                 break;
@@ -66,18 +83,6 @@ Key ExtendedRadixHeap::delete_min() {
         }
     }
 
-    if (min->extended){
-        const ExtendedRadixHeap * heap = min->extended;
-        for (size_t i = 0; i < BUCKETS; ++i){
-            Bucket& b = buckets[i], &hb = heap->buckets[i];
-            b.last->next = hb.first;
-            b.last = hb.last;
-            hb.first = nullptr;
-        }
-        delete heap;
-    }
-
-    delete min;
     return old_min;
 }
 
