@@ -8,12 +8,12 @@
       <sourceFolder url="file://$MODULE_DIR$/lib/googletest/cmake/internal_utils.cmake" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/heap/util.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/heap/RadixHeap.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/heap/BinHeap.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/heap/RadixHeap.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/heap/ExtendedRadixHeap.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/heap/BinHeap.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/heap/ExtendedRadixHeap.cpp" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/heap/RadixHeap.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/heap/ExtendedRadixHeap.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/timer.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/test/test.cpp" isTestSource="false" />
