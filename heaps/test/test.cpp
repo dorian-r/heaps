@@ -32,16 +32,16 @@ void test_heap_extended(ExtendedRadixHeap*& heap, std::vector<Key> keys){
 
 TEST(BinHeap, test_10){
     BinHeap heap (10);
-    test_heap(heap, random_keys(10, 0, 50));
+    test_heap(heap, random_keys(false, 10, 0, 50));
 }
 
 TEST(BinHeap, test_1000000){
     BinHeap heap (1000000);
-    test_heap(heap, random_keys(1000000));
+    test_heap(heap, random_keys(false, 1000000));
 }
 
 TEST(BinHeap, build_10){
-    auto keys = random_keys(10, 0, 50);
+    auto keys = random_keys(false, 10, 0, 50);
     BinHeap * heap = BinHeap::build(&keys[0], 10);
     std::sort(keys.begin(), keys.end());
     std::vector<Key> actual (keys.size());
@@ -53,7 +53,7 @@ TEST(BinHeap, build_10){
 }
 
 TEST(BinHeap, build_1000000){
-    auto keys = random_keys(1000000);
+    auto keys = random_keys(false, 1000000);
     BinHeap * heap = BinHeap::build(&keys[0], 1000000);
     std::sort(keys.begin(), keys.end());
     std::vector<Key> actual (keys.size());
@@ -66,32 +66,32 @@ TEST(BinHeap, build_1000000){
 
 TEST(RadixHeap, test_10){
     RadixHeap heap;
-    test_heap(heap, random_keys_monotone(10, 0, 50));
+    test_heap(heap, random_keys(true, 10, 0, 50));
 }
 
 TEST(RadixHeap, test_1000000){
     RadixHeap heap;
-    test_heap(heap, random_keys_monotone(1000000));
+    test_heap(heap, random_keys(true, 1000000));
 }
 
 TEST(ExtendedRadixHeap, test_monotone_10){
     ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys_monotone(10, 0, 50));
+    test_heap_extended(heap, random_keys(true, 10, 0, 50));
 }
 
 TEST(ExtendedRadixHeap, test_monotone_1000000){
     ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys_monotone(1000000));
+    test_heap_extended(heap, random_keys(true, 1000000));
 }
 
 TEST(ExtendedRadixHeap, test_10){
     ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(10, 0, 50));
+    test_heap_extended(heap, random_keys(false, 10, 0, 50));
 }
 
 TEST(ExtendedRadixHeap, test_1000000){
     ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(1000000));
+    test_heap_extended(heap, random_keys(false, 1000000));
 }
 
 int main(int argc, char **argv) {

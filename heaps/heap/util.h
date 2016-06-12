@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cstddef>
 
-typedef uint64_t Key;
+typedef uint32_t Key;
 
 template<typename T>
 inline void swap(T * a, size_t i, size_t j){

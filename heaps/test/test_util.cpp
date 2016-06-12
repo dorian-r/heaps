@@ -1,7 +1,7 @@
 #include "test_util.h"
 #include <random>
 
-std::vector<Key> _random_keys(bool monotone, size_t count, Key min, Key max, int seed) {
+std::vector<Key> random_keys(bool monotone, size_t count, Key min, Key max, int seed) {
     std::vector<Key> keys (count);
 
     if (monotone){
@@ -17,13 +17,5 @@ std::vector<Key> _random_keys(bool monotone, size_t count, Key min, Key max, int
     }
 
     return keys;
-}
-
-std::vector<Key> random_keys(size_t count, Key min, Key max, int seed) {
-    return _random_keys(false, count, min, max, seed);
-}
-
-std::vector<Key> random_keys_monotone(size_t count, Key min, Key max, int seed) {
-    return _random_keys(true, count, min, max, seed);
 }
 
