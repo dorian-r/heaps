@@ -16,8 +16,8 @@ public:
 
 private:
     struct Node {
-        Node (const Key key, Node * next = nullptr);
-        Node (const ExtendedRadixHeap * heap, Node * next = nullptr);
+        Node (Key key, Node * next = nullptr);
+        Node (ExtendedRadixHeap * heap, Node * next = nullptr);
         ~Node();
 
         const ExtendedRadixHeap * extended;
@@ -25,7 +25,15 @@ private:
         const Key key;
     };
 
-    Node ** buckets;
+    struct Bucket{
+        Node * first, * last;
+    };
+
+    void bucket_insert(size_t bucket, Key key);
+    void bucket_insert(size_t bucket, Node * node);
+    void bucket_remove(size_t bucket);
+
+    Bucket * buckets;
     Key key_min;
     size_t cnt;
 };

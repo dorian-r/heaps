@@ -1,7 +1,18 @@
 cmake_minimum_required(VERSION 3.5)
 project(heaps)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
-set(SOURCE_FILES main.cpp heap/BinHeap.cpp heap/BinHeap.h heap/util.h heap/RadixHeap.cpp heap/RadixHeap.h heap/ExtendedRadixHeap.cpp heap/ExtendedRadixHeap.h)
-add_executable(heaps ${SOURCE_FILES})
+add_subdirectory(lib/googletest)
+
+add_library(heaps_lib  heap/BinHeap.cpp heap/BinHeap.h heap/util.h heap/RadixHeap.cpp heap/RadixHeap.h heap/ExtendedRadixHeap.cpp heap/ExtendedRadixHeap.h)
+
+add_executable(heaps_main main.cpp)
+target_link_libraries(heaps_main heaps_lib)
+
+include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
+include_directories(heap)
+
+add_executable(heaps_test test/test.cpp test/test_util.h test/test_util.cpp)
+target_link_libraries(heaps_test gtest gtest_main)
+target_link_libraries(heaps_test heaps_lib)

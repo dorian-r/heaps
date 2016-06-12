@@ -47,7 +47,8 @@ void BinHeap::resize(size_t new_size) {
 }
 
 BinHeap * BinHeap::build(Key *keys, size_t len) {
-    BinHeap * heap  = new BinHeap(len);
+    BinHeap * heap = new BinHeap(len);
+    heap->cnt = len;
     std::copy(keys, keys + len, heap->arr);
     for (size_t i = len / 2; i > 0; --i){
         heap->heapify_down(i - 1);
@@ -76,6 +77,7 @@ void BinHeap::heapify_down(size_t i) {
         }
         swap(arr, i, m);
         i = m;
+        lc = left(i), rc = right(i);
     }
 }
 
