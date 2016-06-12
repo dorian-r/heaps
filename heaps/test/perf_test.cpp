@@ -10,7 +10,7 @@
 int64_t measure_bin_heap(const std::vector<Key> & keys, int repetitions){
     Timer timer;
     for (int r = 0; r < repetitions; ++r){
-        BinHeap * heap = new BinHeap(keys.size());
+        BinHeap2 * heap = new BinHeap2(keys.size());
         timer.start();
         for (size_t i = 0; i < keys.size(); ++i){
             heap->insert(keys[i]);
@@ -29,7 +29,7 @@ int64_t measure_bin_heap_build(std::vector<Key> & keys, int repetitions){
     Timer timer;
     for (int r = 0; r < repetitions; ++r){
         timer.start();
-        BinHeap * heap = BinHeap::build(&keys[0], keys.size());
+        BinHeap2 * heap = BinHeap2::build(&keys[0], keys.size());
         for (size_t i = 0; i < keys.size(); ++i){
             heap->delete_min();
         }

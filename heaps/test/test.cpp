@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 #include "test_util.h"
-#include "iostream"
 #include "BinHeap.h"
 #include "RadixHeap.h"
 #include "ExtendedRadixHeap.h"
+#include "BinHeap2.h"
 #include <algorithm>
 
 template<typename T> void test_heap(T& heap, std::vector<Key> keys){
@@ -37,6 +37,16 @@ TEST(BinHeap, test_10){
 
 TEST(BinHeap, test_1000000){
     BinHeap heap (1000000);
+    test_heap(heap, random_keys(false, 1000000));
+}
+
+TEST(BinHeap2, test_10){
+    BinHeap2 heap (10);
+    test_heap(heap, random_keys(false, 10, 0, 50));
+}
+
+TEST(BinHeap2, test_1000000){
+    BinHeap2 heap (1000000);
     test_heap(heap, random_keys(false, 1000000));
 }
 

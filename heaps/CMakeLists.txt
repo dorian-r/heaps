@@ -5,7 +5,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_subdirectory(lib/googletest)
 
-add_library(heaps_lib  heap/BinHeap.cpp heap/BinHeap.h heap/util.h heap/RadixHeap.cpp heap/RadixHeap.h heap/ExtendedRadixHeap.cpp heap/ExtendedRadixHeap.h)
+add_library(heaps_lib  heap/BinHeap.cpp heap/BinHeap.h heap/util.h heap/RadixHeap.cpp heap/RadixHeap.h
+        heap/ExtendedRadixHeap.cpp heap/ExtendedRadixHeap.h heap/BinHeap2.h heap/BinHeap2.cpp)
 
 add_executable(heaps_main main.cpp)
 target_link_libraries(heaps_main heaps_lib)
