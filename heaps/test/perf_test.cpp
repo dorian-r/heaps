@@ -36,7 +36,7 @@ void test(bool monotone, int repetitions, size_t count){
     if (monotone) {
         measure_heap<RadixHeap>(keys, repetitions);
     }
-    measure_heap<ExtendedRadixHeapWrapper>(keys, repetitions);
+    measure_heap<ExtRadixHeap>(keys, repetitions);
 }
 
 int main(int argc, char **argv) {

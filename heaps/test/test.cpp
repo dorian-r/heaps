@@ -6,8 +6,8 @@
 #include "BinHeap2.h"
 #include <algorithm>
 
-typedef ::testing::Types<BinHeap, ExtendedRadixHeapWrapper> NonMonotoneHeaps;
-typedef ::testing::Types<RadixHeap, ExtendedRadixHeapWrapper> MonotoneHeaps;
+typedef ::testing::Types<BinHeap, ExtRadixHeap> NonMonotoneHeaps;
+typedef ::testing::Types<RadixHeap, ExtRadixHeap> MonotoneHeaps;
 
 template <typename T> class HeapTestNonMonotone : public ::testing::Test { };
 template <typename T> class HeapTestMonotone : public ::testing::Test { };

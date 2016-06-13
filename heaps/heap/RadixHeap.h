@@ -4,6 +4,7 @@
 
 #include <cstddef>
 #include "util.h"
+#include "Stack.h"
 
 class RadixHeap {
 public:
@@ -13,22 +14,7 @@ public:
     size_t count() const;
 
 private:
-    class Stack {
-    public:
-        Stack();
-        ~Stack();
-        void push(const Key x);
-        void pop();
-        Key operator[](const size_t i) const;
-        size_t length() const;
-        void reset();
-    private:
-        void resize(const size_t new_size);
-        size_t size, len;
-        Key * arr;
-    };
-
-    Stack buckets [BUCKETS];
+    Stack<Key> buckets [BUCKETS];
     Key key_min;
     size_t cnt = 0;
 };
