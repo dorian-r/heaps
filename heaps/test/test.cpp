@@ -6,10 +6,13 @@
 #include "BinHeap2.h"
 #include <algorithm>
 
-template<typename T> void test_heap(T& heap, std::vector<Key> keys){
-    for (const auto & key : keys){
-        heap.insert(key);
-    }
+typedef ::testing::Types<BinHeap, ExtendedRadixHeapWrapper> NonMonotoneHeaps;
+typedef ::testing::Types<RadixHeap, ExtendedRadixHeapWrapper> MonotoneHeaps;
+
+template <typename T> class HeapTestNonMonotone : public ::testing::Test { };
+template <typename T> class HeapTestMonotone : public ::testing::Test { };
+
+template<typename T> void test_heap_delete(T& heap, std::vector<Key>& keys){
     std::sort(keys.begin(), keys.end());
     std::vector<Key> actual (keys.size());
     for (size_t i = 0; i < keys.size(); ++i){
@@ -18,90 +21,45 @@ template<typename T> void test_heap(T& heap, std::vector<Key> keys){
     EXPECT_EQ(keys, actual);
 }
 
-void test_heap_extended(ExtendedRadixHeap*& heap, std::vector<Key> keys){
+template<typename T> void test_heap(std::vector<Key> keys){
+    T heap (keys.size());
     for (const auto & key : keys){
-        heap->insert(key, heap);
+        heap.insert(key);
     }
-    std::sort(keys.begin(), keys.end());
-    std::vector<Key> actual (keys.size());
-    for (size_t i = 0; i < keys.size(); ++i){
-        actual[i] = heap->delete_min();
-    }
-    EXPECT_EQ(keys, actual);
+    test_heap_delete(heap, keys);
 }
 
-TEST(BinHeap, test_10){
-    BinHeap heap (10);
-    test_heap(heap, random_keys(false, 10, 0, 50));
+TYPED_TEST_CASE(HeapTestNonMonotone, NonMonotoneHeaps);
+TYPED_TEST_CASE(HeapTestMonotone, MonotoneHeaps);
+
+TYPED_TEST(HeapTestNonMonotone, test_10){
+    test_heap<TypeParam>(random_keys(false, 10, 0, 50));
 }
 
-TEST(BinHeap, test_1000000){
-    BinHeap heap (1000000);
-    test_heap(heap, random_keys(false, 1000000));
+TYPED_TEST(HeapTestNonMonotone, test_1000000){
+    test_heap<TypeParam>(random_keys(false, 1000000));
 }
 
-TEST(BinHeap2, test_10){
-    BinHeap2 heap (10);
-    test_heap(heap, random_keys(false, 10, 0, 50));
+TYPED_TEST(HeapTestMonotone, test_10){
+    test_heap<TypeParam>(random_keys(true, 10, 0, 50));
 }
 
-TEST(BinHeap2, test_1000000){
-    BinHeap2 heap (1000000);
-    test_heap(heap, random_keys(false, 1000000));
+TYPED_TEST(HeapTestMonotone, test_1000000){
+    test_heap<TypeParam>(random_keys(true, 1000000));
 }
 
 TEST(BinHeap, build_10){
     auto keys = random_keys(false, 10, 0, 50);
     BinHeap * heap = BinHeap::build(&keys[0], 10);
-    std::sort(keys.begin(), keys.end());
-    std::vector<Key> actual (keys.size());
-    for (size_t i = 0; i < keys.size(); ++i){
-        actual[i] = heap->delete_min();
-    }
+    test_heap_delete(*heap, keys);
     delete heap;
-    EXPECT_EQ(keys, actual);
 }
 
 TEST(BinHeap, build_1000000){
     auto keys = random_keys(false, 1000000);
     BinHeap * heap = BinHeap::build(&keys[0], 1000000);
-    std::sort(keys.begin(), keys.end());
-    std::vector<Key> actual (keys.size());
-    for (size_t i = 0; i < keys.size(); ++i){
-        actual[i] = heap->delete_min();
-    }
+    test_heap_delete(*heap, keys);
     delete heap;
-    EXPECT_EQ(keys, actual);
-}
-
-TEST(RadixHeap, test_10){
-    RadixHeap heap;
-    test_heap(heap, random_keys(true, 10, 0, 50));
-}
-
-TEST(RadixHeap, test_1000000){
-    RadixHeap heap;
-    test_heap(heap, random_keys(true, 1000000));
-}
-
-TEST(ExtendedRadixHeap, test_monotone_10){
-    ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(true, 10, 0, 50));
-}
-
-TEST(ExtendedRadixHeap, test_monotone_1000000){
-    ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(true, 1000000));
-}
-
-TEST(ExtendedRadixHeap, test_10){
-    ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(false, 10, 0, 50));
-}
-
-TEST(ExtendedRadixHeap, test_1000000){
-    ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-    test_heap_extended(heap, random_keys(false, 1000000));
 }
 
 int main(int argc, char **argv) {

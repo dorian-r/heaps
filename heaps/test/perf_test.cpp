@@ -1,8 +1,9 @@
 #include <iostream>
 #include "test_util.h"
 #include "Timer.h"
-#include <util.h>
-#include <BinHeap.h>
+#include "util.h"
+#include "BinHeap.h"
+#include "BinHeap2.h"
 #include <type_traits>
 #include <ExtendedRadixHeap.h>
 #include <RadixHeap.h>
@@ -10,7 +11,7 @@
 int64_t measure_bin_heap(const std::vector<Key> & keys, int repetitions){
     Timer timer;
     for (int r = 0; r < repetitions; ++r){
-        BinHeap2 * heap = new BinHeap2(keys.size());
+        BinHeap * heap = new BinHeap(keys.size());
         timer.start();
         for (size_t i = 0; i < keys.size(); ++i){
             heap->insert(keys[i]);
@@ -29,7 +30,7 @@ int64_t measure_bin_heap_build(std::vector<Key> & keys, int repetitions){
     Timer timer;
     for (int r = 0; r < repetitions; ++r){
         timer.start();
-        BinHeap2 * heap = BinHeap2::build(&keys[0], keys.size());
+        BinHeap * heap = BinHeap::build(&keys[0], keys.size());
         for (size_t i = 0; i < keys.size(); ++i){
             heap->delete_min();
         }

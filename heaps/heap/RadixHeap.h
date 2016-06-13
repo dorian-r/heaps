@@ -7,6 +7,7 @@
 
 class RadixHeap {
 public:
+    RadixHeap(size_t size=0){}
     void insert(const Key x);
     Key delete_min();
     size_t count() const;

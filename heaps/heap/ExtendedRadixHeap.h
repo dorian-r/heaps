@@ -36,5 +36,19 @@ private:
     size_t cnt = 0;
 };
 
+class ExtendedRadixHeapWrapper {
+public:
+    ExtendedRadixHeapWrapper(size_t size=0) : heap(new ExtendedRadixHeap){ }
+    ~ExtendedRadixHeapWrapper() { delete heap; }
+    void insert(const Key x){
+        heap->insert(x, heap);
+    }
+    Key delete_min(){
+        return heap->delete_min();
+    }
+private:
+    ExtendedRadixHeap * heap;
+};
+
 
 #endif //HEAPS_EXTENDEDRADIXHEAP_H
