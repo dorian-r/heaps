@@ -12,7 +12,7 @@ Key RadixHeap::delete_min() {
     --cnt;
     Key old_min = key_min;
     if (buckets[0].length() > 0){
-        buckets[0].pop();
+        buckets[0].del();
     }
     if (buckets[0].length() == 0){
         for (size_t i = 1; i < BUCKETS; ++i){

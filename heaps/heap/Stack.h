@@ -15,7 +15,8 @@ public:
         }
         arr[len++] = x;
     }
-    void pop() { --len; }
+    void del() { --len; }
+    T pop() { return arr[--len]; }
     T operator[](const size_t i) const { return arr[i]; }
     size_t length() const { return len; };
     void reset() {len = 0;}
