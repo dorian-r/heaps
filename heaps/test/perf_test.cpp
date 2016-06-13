@@ -8,10 +8,10 @@
 #include <ExtendedRadixHeap.h>
 #include <RadixHeap.h>
 
-int64_t measure_bin_heap(const std::vector<Key> & keys, int repetitions){
+template <typename T> int64_t measure_heap(const std::vector<Key> & keys, int repetitions){
     Timer timer;
-    for (int r = 0; r < repetitions; ++r){
-        BinHeap * heap = new BinHeap(keys.size());
+    for (int r = 0; r < repetitions + 1; ++r){
+        T * heap = new T(keys.size());
         timer.start();
         for (size_t i = 0; i < keys.size(); ++i){
             heap->insert(keys[i]);
@@ -20,57 +20,9 @@ int64_t measure_bin_heap(const std::vector<Key> & keys, int repetitions){
             heap->delete_min();
         }
         timer.stop();
-        delete heap;
-    }
-    std::cout << timer.average() << std::endl;
-    return timer.average();
-}
-
-int64_t measure_bin_heap_build(std::vector<Key> & keys, int repetitions){
-    Timer timer;
-    for (int r = 0; r < repetitions; ++r){
-        timer.start();
-        BinHeap * heap = BinHeap::build(&keys[0], keys.size());
-        for (size_t i = 0; i < keys.size(); ++i){
-            heap->delete_min();
+        if (r == 0){
+            timer.reset();
         }
-        timer.stop();
-        delete heap;
-    }
-    std::cout << timer.average() << std::endl;
-    return timer.average();
-}
-
-int64_t measure_radix_heap(const std::vector<Key> & keys, int repetitions){
-    Timer timer;
-    for (int r = 0; r < repetitions; ++r){
-        RadixHeap * heap = new RadixHeap;
-        timer.start();
-        for (size_t i = 0; i < keys.size(); ++i){
-            heap->insert(keys[i]);
-        }
-        for (size_t i = 0; i < keys.size(); ++i){
-            heap->delete_min();
-        }
-        timer.stop();
-        delete heap;
-    }
-    std::cout << timer.average() << std::endl;
-    return timer.average();
-}
-
-int64_t measure_extended_radix_heap(const std::vector<Key> & keys, int repetitions){
-    Timer timer;
-    for (int r = 0; r < repetitions; ++r){
-        ExtendedRadixHeap * heap = new ExtendedRadixHeap;
-        timer.start();
-        for (size_t i = 0; i < keys.size(); ++i){
-            heap->insert(keys[i], heap);
-        }
-        for (size_t i = 0; i < keys.size(); ++i){
-            heap->delete_min();
-        }
-        timer.stop();
         delete heap;
     }
     std::cout << timer.average() << std::endl;
@@ -79,14 +31,14 @@ int64_t measure_extended_radix_heap(const std::vector<Key> & keys, int repetitio
 
 void test(bool monotone, int repetitions, size_t count){
     auto keys = random_keys(monotone, count);
-    measure_bin_heap(keys, repetitions);
+    measure_heap<BinHeap>(keys, repetitions);
     //measure_bin_heap_build(keys, repetitions);
     if (monotone) {
-        measure_radix_heap(keys, repetitions);
+        measure_heap<RadixHeap>(keys, repetitions);
     }
-    measure_extended_radix_heap(keys, repetitions);
+    measure_heap<ExtendedRadixHeapWrapper>(keys, repetitions);
 }
 
 int main(int argc, char **argv) {
-    test(true, 1, 10000000);
+    test(true, 3, 1000000);
 }
