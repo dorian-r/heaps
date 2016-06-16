@@ -46,7 +46,7 @@ Key ExtendedRadixHeap2::delete_min() {
         }
     }
 
-    return key_min;
+    return old_min;
 }
 
 size_t ExtendedRadixHeap2::count() const {
@@ -62,9 +62,9 @@ void ExtendedRadixHeap2::bucket_insert(const size_t bucket, const Item item) {
     b->stack.push(item);
 }
 
-Item ExtendedRadixHeap2::bucket_pop(const size_t bucket) {
+ExtendedRadixHeap2::Item ExtendedRadixHeap2::bucket_pop(const size_t bucket) {
     auto & b = buckets[bucket];
-    const Item item = b->stack.pop();
+    Item item = b->stack.pop();
     if (b->stack.length() == 0){
         auto tmp = b;
         b = b->next;

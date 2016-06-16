@@ -3,6 +3,7 @@
 #include "BinHeap.h"
 #include "RadixHeap.h"
 #include "ExtendedRadixHeap.h"
+#include "ExtendedRadixHeap2.h"
 #include "BinHeap2.h"
 #include <algorithm>
 
@@ -46,6 +47,14 @@ TYPED_TEST(HeapTestMonotone, test_10){
 
 TYPED_TEST(HeapTestMonotone, test_1000000){
     test_heap<TypeParam>(random_keys(true, 1000000));
+}
+
+TEST(erh, test_10){
+    test_heap<ExtRadixHeap2>(random_keys(false, 10, 0, 50));
+}
+
+TEST(erh, test_1000000){
+    test_heap<ExtRadixHeap2>(random_keys(true, 1000000));
 }
 
 TEST(BinHeap, build_10){
