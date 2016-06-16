@@ -113,7 +113,7 @@ void ExtendedRadixHeap2::redistribute(size_t bucket) {
         }
         auto tmp = b;
         b = b->next;
-        delete b;
+        delete tmp;
     }
     buckets[bucket] = nullptr;
     last_bucket[bucket] = nullptr;

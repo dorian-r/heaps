@@ -5,8 +5,9 @@
 #include "BinHeap.h"
 #include "BinHeap2.h"
 #include <type_traits>
-#include <ExtendedRadixHeap.h>
-#include <RadixHeap.h>
+#include "ExtendedRadixHeap.h"
+#include "RadixHeap.h"
+#include "ExtendedRadixHeap2.h"
 
 template <typename T> int64_t measure_heap(const std::vector<Key> & keys, int repetitions){
     Timer timer;
@@ -37,8 +38,9 @@ void test(bool monotone, int repetitions, size_t count){
         measure_heap<RadixHeap>(keys, repetitions);
     }
     measure_heap<ExtRadixHeap>(keys, repetitions);
+    measure_heap<ExtRadixHeap2>(keys, repetitions);
 }
 
 int main(int argc, char **argv) {
-    test(true, 3, 1000000);
+    test(false, 3, 1000000);
 }
