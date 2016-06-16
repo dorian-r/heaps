@@ -37,9 +37,9 @@ Key ExtendedRadixHeap2::delete_min() {
     }
     Key old_min = key_min;
 
-    if (buckets[0] == nullptr){
-        for (size_t i = 0; i < BUCKETS; ++i){
-            if (buckets[i] != nullptr){
+    if (bucket_empty(0)){
+        for (size_t i = 1; i < BUCKETS; ++i){
+            if (!bucket_empty(i)){
                 redistribute(i);
                 break;
             }
@@ -63,24 +63,29 @@ void ExtendedRadixHeap2::bucket_insert(const size_t bucket, const Item item) {
 }
 
 ExtendedRadixHeap2::Item ExtendedRadixHeap2::bucket_pop(const size_t bucket) {
-    auto & b = buckets[bucket];
-    Item item = b->stack.pop();
-    if (b->stack.length() == 0){
-        auto tmp = b;
-        b = b->next;
-        delete tmp;
-    }
-    if (b == nullptr){
-        last_bucket[bucket] = nullptr;
+    auto b = buckets[bucket];
+    Item item;
+    if (b->stack.length() > 0){
+        item = b->stack.pop();
+    } else {
+        item = b->next->stack.pop();
+        if (b->next->stack.length() == 0){
+            auto tmp = b->next;
+            b->next = b->next->next;
+            if (b->next == nullptr){
+                last_bucket[bucket] = b;
+            }
+            delete tmp;
+        }
     }
     return item;
 }
 
 void ExtendedRadixHeap2::join(ExtendedRadixHeap2 *heap) {
     for (size_t i = 0; i < BUCKETS; ++i){
-        auto & bucket = heap->buckets[i];
-        if (bucket != nullptr){
+        if (!heap->bucket_empty(i)){
             auto & last = last_bucket[i];
+            auto & bucket = heap->buckets[i];
             if (last == nullptr){
                 buckets[i] = bucket;
             } else {
@@ -113,11 +118,22 @@ void ExtendedRadixHeap2::redistribute(size_t bucket) {
         }
         auto tmp = b;
         b = b->next;
-        delete tmp;
+        if (b == buckets[0]){
+            b->stack.reset();
+        } else {
+            delete tmp;
+        }
     }
     buckets[bucket] = nullptr;
     last_bucket[bucket] = nullptr;
 }
+
+bool ExtendedRadixHeap2::bucket_empty(const size_t bucket) {
+    auto b = buckets[bucket];
+    return b == nullptr || (b->stack.length() == 0 && b->next == nullptr);
+}
+
+
 
 
 

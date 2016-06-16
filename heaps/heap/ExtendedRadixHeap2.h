@@ -26,6 +26,7 @@ private:
 
     void bucket_insert(const size_t bucket, Item item);
     Item bucket_pop(const size_t bucket);
+    bool bucket_empty(const size_t bucket);
     void join(ExtendedRadixHeap2 * heap);
     void redistribute(size_t bucket);
 

@@ -45,6 +45,10 @@ TYPED_TEST(HeapTestMonotone, test_10){
     test_heap<TypeParam>(random_keys(true, 10, 0, 50));
 }
 
+//TEST(erh, test_10){
+//    test_heap<ExtRadixHeap2>(random_keys(false, 10, 0, 50));
+//}
+
 TYPED_TEST(HeapTestMonotone, test_1000000){
     test_heap<TypeParam>(random_keys(true, 1000000));
 }

@@ -42,5 +42,5 @@ void test(bool monotone, int repetitions, size_t count){
 }
 
 int main(int argc, char **argv) {
-    test(false, 3, 1000000);
+    test(false, 3, 10000000);
 }
