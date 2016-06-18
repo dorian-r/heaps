@@ -1,0 +1,28 @@
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[margin=2cm, nohead]{geometry}
+\usepackage{parskip}
+\usepackage{listings}
+\usepackage{array}
+\usepackage{arydshln}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+
+\title{Extended Radix Heap}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Correction}
+
+Before addressing the implementation I have to make one small correction to the given \texttt{deleteMin} algorithm from the slides: When $B[-1]$ is not empty, we have to remove the first element and join its buckets with the heap if it is a super element until a normal element is removed. Since super elements will have to be joined to the heap at some point this does not effect the amortized time complexity.
+
+If we would search for a normal element with each \texttt{deleteMin}, an example could easily be constructed with $n/2$ super elements of size 1 followed by $n/2$ normal elements in $B[-1]$. Then removing all $n$ elements would take $\Omega(n^2)$ time. 
+
+\section{Efficient implementation}
+
+\end{document}
