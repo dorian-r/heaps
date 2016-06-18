@@ -20,6 +20,9 @@ void ExtendedRadixHeap2::insert(const Key x, ExtendedRadixHeap2 *&self) {
         ++cnt;
         bucket_insert(bucket, x);
     } else {
+#ifdef SHRINK
+        shrink();
+#endif
         ExtendedRadixHeap2 * heap = new ExtendedRadixHeap2();
         heap->insert(x, heap);
         heap->cnt += cnt;
@@ -100,12 +103,13 @@ void ExtendedRadixHeap2::join(ExtendedRadixHeap2 *heap) {
 
 void ExtendedRadixHeap2::redistribute(size_t bucket) {
     auto b = buckets[bucket];
-    key_min = b->stack[0].key;
+    bool key_min_set = false;
     while (b){
         for (size_t i = 0; i < b->stack.length(); ++i){
             Key key = b->stack[i].key;
-            if (key < key_min){
+            if (!key_min_set || key < key_min){
                 key_min = key;
+                key_min_set = true;
             }
         }
         b = b->next;
@@ -118,20 +122,31 @@ void ExtendedRadixHeap2::redistribute(size_t bucket) {
         }
         auto tmp = b;
         b = b->next;
-        if (b == buckets[0]){
-            b->stack.reset();
+        if (tmp == buckets[bucket]){
+            tmp->stack.reset(cnt / 8);
         } else {
             delete tmp;
         }
     }
-    buckets[bucket] = nullptr;
-    last_bucket[bucket] = nullptr;
+    last_bucket[bucket] = buckets[bucket];
+    last_bucket[bucket]->next = nullptr;
 }
 
 bool ExtendedRadixHeap2::bucket_empty(const size_t bucket) {
     auto b = buckets[bucket];
     return b == nullptr || (b->stack.length() == 0 && b->next == nullptr);
 }
+
+void ExtendedRadixHeap2::shrink() {
+    for (size_t i = 0; i < BUCKETS; ++i){
+        auto b = buckets[i];
+        if (b){
+            b->stack.resize(b->stack.length());
+        }
+    }
+}
+
+
 
 
 

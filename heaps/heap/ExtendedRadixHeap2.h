@@ -30,6 +30,8 @@ private:
     void join(ExtendedRadixHeap2 * heap);
     void redistribute(size_t bucket);
 
+    void shrink();
+
     LazyBucket * buckets [BUCKETS] = {};
     LazyBucket * last_bucket [BUCKETS] = {};
     Key key_min;

@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "RadixHeap.h"
+#include "util.h"
 
 void RadixHeap::insert(const Key x) {
     if (cnt++ == 0){
@@ -12,7 +13,7 @@ Key RadixHeap::delete_min() {
     --cnt;
     Key old_min = key_min;
     if (buckets[0].length() > 0){
-        buckets[0].del();
+        buckets[0].pop();
     }
     if (buckets[0].length() == 0){
         for (size_t i = 1; i < BUCKETS; ++i){
@@ -37,7 +38,7 @@ Key RadixHeap::delete_min() {
                         buckets[msd(cur, key_min)].push(cur);
                     }
                 }
-                bucket.reset();
+                bucket.reset(cnt / 8);
 
                 break;
             }

@@ -19,6 +19,11 @@ Key BinHeap::delete_min() {
     Key min = arr[0];
     arr[0] = arr[--cnt];
     heapify_down(0);
+#ifdef SHRINK
+    if (4 * size < cnt){
+        resize(2 * size);
+    }
+#endif
     return min;
 }
 

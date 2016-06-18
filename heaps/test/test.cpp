@@ -46,7 +46,7 @@ TYPED_TEST(HeapTestMonotone, test_10){
 }
 
 //TEST(erh, test_10){
-//    test_heap<ExtRadixHeap2>(random_keys(false, 10, 0, 50));
+//    test_heap<ExtRadixHeap2>({2, 3, 0, 1});
 //}
 
 TYPED_TEST(HeapTestMonotone, test_1000000){

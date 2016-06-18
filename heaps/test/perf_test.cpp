@@ -1,10 +1,8 @@
 #include <iostream>
 #include "test_util.h"
 #include "Timer.h"
-#include "util.h"
 #include "BinHeap.h"
 #include "BinHeap2.h"
-#include <type_traits>
 #include "ExtendedRadixHeap.h"
 #include "RadixHeap.h"
 #include "ExtendedRadixHeap2.h"
@@ -33,7 +31,6 @@ template <typename T> int64_t measure_heap(const std::vector<Key> & keys, int re
 void test(bool monotone, int repetitions, size_t count){
     auto keys = random_keys(monotone, count);
     measure_heap<BinHeap>(keys, repetitions);
-    //measure_bin_heap_build(keys, repetitions);
     if (monotone) {
         measure_heap<RadixHeap>(keys, repetitions);
     }
@@ -42,5 +39,5 @@ void test(bool monotone, int repetitions, size_t count){
 }
 
 int main(int argc, char **argv) {
-    test(false, 3, 10000000);
+    test(false, 1, 10000000);
 }
