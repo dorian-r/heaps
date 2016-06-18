@@ -10,19 +10,59 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 
-\title{Extended Radix Heap}
-\date{}
-
 \begin{document}
 
-\maketitle
+\begin{center}
+\LARGE Extended Radix Heap
+\end{center}
 
 \section{Correction}
 
-Before addressing the implementation I have to make one small correction to the given \texttt{deleteMin} algorithm from the slides: When $B[-1]$ is not empty, we have to remove the first element and join its buckets with the heap if it is a super element until a normal element is removed. Since super elements will have to be joined to the heap at some point this does not effect the amortized time complexity.
+Before addressing the implementation I have to make one small correction to the given \texttt{deleteMin} algorithm from the slides:
+When $B[-1]$ is not empty, we have to remove the first element and join its buckets with the heap if it is a super element until a normal element is removed.
+Since super elements will have to be joined to the heap at some point this does not effect the amortized time complexity.
 
-If we would search for a normal element with each \texttt{deleteMin}, an example could easily be constructed with $n/2$ super elements of size 1 followed by $n/2$ normal elements in $B[-1]$. Then removing all $n$ elements would take $\Omega(n^2)$ time. 
+If we would search for a normal element with each \texttt{deleteMin}, an example could easily be constructed with $n/2$ super elements of size 1 followed by $n/2$ normal elements in $B[-1]$.
+Then removing all $n$ elements would take $\Omega(n^2)$ time. 
 
 \section{Efficient implementation}
+
+It is clear that the implementation of radix heaps and extended radix heaps with linked lists is fairly inefficient due to poor caching performance and the pointer structure's overhead.
+Therefore radix heaps are usually implemented with dynamic arrays as buckets.
+
+Since two dynamic arrays cannot be joined in $O(1)$ we cannot directly use them for extended radix heaps.
+But they can be combined with linked lists to get the advantages from both structures.
+So a bucket shall consist of a linked list of dynamic arrays.
+When adding an entry to the bucket, it shall be inserted into the first dynamic array in the linked list.
+To merge two extended radix heaps, we can just concatenate the linked lists for each bucket.
+When removing an element from the bucket we remove it from the first dynamic array. If it is empty, the array is removed from the linked list.
+
+\subsection{Freeing memory efficiently}
+
+I noticed that quite a bit of performance is lost allocating new dynamic arrays if the extended radix heap is implemented exactly as described above. Therefore the first dynamic array in the linked list shall never be deleted.
+
+After a bucket is redistributed, it will be empty at first but most likely be filled again after the redistribution of subsequent buckets. If we make $n/\alpha$ the upper bound for the size of a bucket after redistribution for some constant $\alpha$, we can still guarantee $O(n)$ space complexity (if the following point is implemented as well) and do not have to reallocate buckets completely after emptying them. (The same strategy can be used to optimize regular radix heaps.)
+
+We can observe that once an extended radix heap is made into a super element, it will never be inserted into again. Therefore we can resize its dynamic arrays to exactly fit their contents. It is sufficient to just resize the first dynamic array in each bucket since the ones after that already come from a super element.
+
+Another optimization (which I did not implement) is to reuse buckets from super elements when constructing new super elements.
+
+\section{Analysis}
+
+For the following test cases $n$ uniformly distributed random elements have been inserted into the heaps and removed again. The times are in nanoseconds. (Test system: gcc 4.8.4, Linux Mint 17.3, Intel i5-4670k)
+
+\begin{Tabular}{r | r | r | r | r | r | r}
+	\multicolumn{1}{c}{} & \multicolumn{3}{c}{non monotone $k_{min}$} & \multicolumn{3}{c}{Monotone $k_{min}$} \\
+	$n$ & Binary heap & Ext. radix heap & Opt. e.r.h & Radix heap & E.r.h. & O.e.r.h \\\hline
+	1000 & 39385 & 76158 & 99984 & 54808 & 73665 & 108586 \\
+	10000 & 594343 & 962462 & 928032 & 526514 & 1129981 & 945356 \\
+	100000 & 9472794 & 18775911 & 10152550 & 6920971 & 25399330 & 9737797 \\
+	1000000 & 190116167 & 332570835 & 97509766 & 56790425 & 305374795 & 96734549 \\
+	10000000 & 3313649587 & 5858313703 & 1145210484 & 636190049 & 6080436276 & 1232926323 \\
+\end{Tabular}
+
+We can see that the optimized extended radix heap is substantially faster than the binary heap with $\sim 100000$ and more elements. The optimized version is faster than the original with $\sim 10000$ and more elements.
+
+When having a monotone $k_{min}$, the extended radix heap behaves essentially like an ordinary radix heap. Still, the extended radix heap appears to have some additional overhead. Especially approaching larger $n$. I conjecture that the latter is due to the fact that each element has to store an additional pointer. Consequently each element in the radix heap is just an \texttt{uint32\_t} while elements in an extended radix heap are \texttt{struct\{uint32\_t, ExtendedRadixHeap*\}} requiring 3 times the memory.
 
 \end{document}
