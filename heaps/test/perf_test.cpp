@@ -30,14 +30,23 @@ template <typename T> int64_t measure_heap(const std::vector<Key> & keys, int re
 
 void test(bool monotone, int repetitions, size_t count){
     auto keys = random_keys(monotone, count);
-    measure_heap<BinHeap>(keys, repetitions);
     if (monotone) {
         measure_heap<RadixHeap>(keys, repetitions);
+    } else {
+        measure_heap<BinHeap>(keys, repetitions);
     }
     measure_heap<ExtRadixHeap>(keys, repetitions);
     measure_heap<ExtRadixHeap2>(keys, repetitions);
 }
 
+void test2(int repetitions, size_t count){
+    auto keys = random_keys(false, count);
+    measure_heap<BinHeap2>(keys, repetitions);
+    measure_heap<BinHeap>(keys, repetitions);
+    measure_heap<BinHeap2>(keys, repetitions);
+    measure_heap<BinHeap>(keys, repetitions);
+}
+
 int main(int argc, char **argv) {
-    test(false, 1, 10000000);
+    test2(10, 1000000);
 }

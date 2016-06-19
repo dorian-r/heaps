@@ -7,7 +7,7 @@
 #include "BinHeap2.h"
 #include <algorithm>
 
-typedef ::testing::Types<BinHeap, ExtRadixHeap, ExtRadixHeap2> NonMonotoneHeaps;
+typedef ::testing::Types<BinHeap, ExtRadixHeap, ExtRadixHeap2, BinHeap2> NonMonotoneHeaps;
 typedef ::testing::Types<RadixHeap, ExtRadixHeap, ExtRadixHeap2> MonotoneHeaps;
 
 template <typename T> class HeapTestNonMonotone : public ::testing::Test { };
@@ -44,10 +44,6 @@ TYPED_TEST(HeapTestNonMonotone, test_1000000){
 TYPED_TEST(HeapTestMonotone, test_10){
     test_heap<TypeParam>(random_keys(true, 10, 0, 50));
 }
-
-//TEST(erh, test_10){
-//    test_heap<ExtRadixHeap2>({2, 3, 0, 1});
-//}
 
 TYPED_TEST(HeapTestMonotone, test_1000000){
     test_heap<TypeParam>(random_keys(true, 1000000));

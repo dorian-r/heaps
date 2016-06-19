@@ -11,6 +11,9 @@ public:
     void insert(const Key x);
     Key delete_min();
     size_t count() const;
+    bool check_heap_invariant(size_t i = 0);
+    void print_heap(size_t i = 0);
+    void check(size_t i = 0);
 private:
     Key * arr;
     size_t size, cnt, last;
