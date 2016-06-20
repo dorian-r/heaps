@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 
 add_subdirectory(lib/googletest)
 
-#add_definitions(-DSHRINK)
+#add_definitions(-DSHRINK) #make heaps also shrink when emptying
 
 add_library(heaps_lib  heap/BinHeap.cpp heap/BinHeap.h heap/util.h heap/RadixHeap.cpp heap/RadixHeap.h
         heap/ExtendedRadixHeap.cpp heap/ExtendedRadixHeap.h heap/BinHeap2.h heap/BinHeap2.cpp heap/Stack.h

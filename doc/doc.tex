@@ -61,8 +61,11 @@ For the following test cases $n$ uniformly distributed random elements have been
 	10000000 & 3313649587 & 5858313703 & 1145210484 & 636190049 & 6080436276 & 1232926323 \\
 \end{Tabular}
 
-We can see that the optimized extended radix heap is substantially faster than the binary heap with $\sim 100000$ and more elements. The optimized version is faster than the original with $\sim 10000$ and more elements.
+We can see that the optimized extended radix heap is substantially faster than the binary heap with $\sim 100000$ and more elements.
+The optimized version is faster than the original with $\sim 10000$ and more elements.
 
-When having a monotone $k_{min}$, the extended radix heap behaves essentially like an ordinary radix heap. Still, the extended radix heap appears to have some additional overhead. Especially approaching larger $n$. I conjecture that the latter is due to the fact that each element has to store an additional pointer. Consequently each element in the radix heap is just an \texttt{uint32\_t} while elements in an extended radix heap are \texttt{struct\{uint32\_t, ExtendedRadixHeap*\}} requiring 3 times the memory.
+When having a monotone $k_{min}$, the extended radix heap behaves essentially like an ordinary radix heap. Still, the extended radix heap appears to have some additional overhead, especially approaching larger $n$.
+I conjecture that the latter is due to the fact that each element has to store an additional pointer.
+Consequently each element in the radix heap is just an \texttt{uint32\_t} while elements in an extended radix heap are \texttt{struct\{uint32\_t, ExtendedRadixHeap*\}} requiring 3 times the memory.
 
 \end{document}

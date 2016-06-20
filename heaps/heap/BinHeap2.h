@@ -11,12 +11,10 @@ public:
     void insert(const Key x);
     Key delete_min();
     size_t count() const;
-    bool check_heap_invariant(size_t i = 0);
-    void print_heap(size_t i = 0);
-    void check(size_t i = 0);
 private:
     Key * arr;
     size_t size, cnt, last;
+    Key * ptr;
     void resize(size_t new_size);
     void heapify_up(size_t i);
     void heapify_down(size_t i);
@@ -24,6 +22,7 @@ private:
     static size_t left(size_t i);
     static size_t right(size_t i);
     size_t last_idx();
+    void allocate(size_t size);
 };
 
 

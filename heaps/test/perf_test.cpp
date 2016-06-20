@@ -48,5 +48,5 @@ void test2(int repetitions, size_t count){
 }
 
 int main(int argc, char **argv) {
-    test2(10, 1000000);
+    test2(1, 10000000);
 }

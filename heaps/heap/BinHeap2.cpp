@@ -1,13 +1,23 @@
 #include "BinHeap2.h"
 #include <algorithm>
 #include <iostream>
+#include <memory>
 
 const size_t mod16 = ~((size_t)0) >> (8 * sizeof(size_t) - 4);
 
-BinHeap2::BinHeap2(const size_t size) : size(size), cnt(0), arr(new Key [(size + 14) / 15 * 16]), last(0){}
+const size_t modD = mod16; //modulus operator
+const size_t D = 16; //size the of array slice where on block will be stored
+const size_t S = D - 1; //number of nodes stored in one block
+const size_t F = 7; //number of nodes in one block that are not leaves
+
+const size_t alignment = 64;
+
+BinHeap2::BinHeap2(const size_t size) : size(size), cnt(0), last(0){
+    allocate(size);
+}
 
 BinHeap2::~BinHeap2() {
-    delete [] arr;
+    delete [] ptr;
 }
 
 void BinHeap2::insert(const Key x) {
@@ -34,36 +44,35 @@ size_t BinHeap2::count() const {
 }
 
 size_t BinHeap2::parent(size_t i) {
-    const size_t m = i & mod16, b = i / 16;
+    const size_t m = i & modD, b = i / D;
     if (m){
-        return b * 16 + (m - 1) / 2;
+        return b * D + (m - 1) / 2;
     }
-    const size_t pb = (b - 1) / 16;
-    return 16 * pb + 6 + (b - 16 * pb + 1) / 2;
+    const size_t pb = (b - 1) / D;
+    return D * pb + F - 1 + (b - D * pb + 1) / 2;
 }
 
 size_t BinHeap2::left(size_t i) {
-    const size_t m = i & mod16, b = i / 16;
-    if (m < 7){
-        return b * 16 + m * 2 + 1;
+    const size_t m = i & modD, b = i / D;
+    if (m < F){
+        return b * D + m * 2 + 1;
     }
-    return (b * 16 + (m - 7) * 2 + 1) * 16;
+    return (b * D + (m - F) * 2 + 1) * D;
 }
 
 size_t BinHeap2::right(size_t i) {
-    const size_t m = i & mod16, b = i / 16;
-    if (m < 7){
-        return b * 16 + m * 2 + 2;
+    const size_t m = i & modD, b = i / D;
+    if (m < F){
+        return b * D + m * 2 + 2;
     }
-    return (b * 16 + (m - 7) * 2 + 2) * 16;
+    return (b * D + (m - F) * 2 + 2) * D;
 }
 
 void BinHeap2::resize(size_t new_size) {
-    Key * new_arr = new Key[new_size];
-    std::copy(arr, arr + cnt, new_arr);
-    delete [] arr;
-    arr = new_arr;
-    size = new_size;
+    Key * old_arr = arr, * old_ptr = ptr;
+    allocate(new_size);
+    std::copy(old_arr, old_arr + last_idx(), arr);
+    delete [] old_ptr;
 }
 
 
@@ -93,57 +102,17 @@ void BinHeap2::heapify_down(size_t i) {
 }
 
 size_t BinHeap2::last_idx() {
-    return (cnt / 15) * 16 + cnt % 15;
+    return (cnt / S) * D + cnt % S;
 }
 
-bool BinHeap2::check_heap_invariant(size_t i) {
-    bool ret = true;
-    if (left(i) < last){
-        ret &= arr[i] <= arr[left(i)];
-        if (ret){
-            ret &= check_heap_invariant(left(i));
-        } else {
-            std::cout << "inv " << i << std::endl;
-            return false;
-        }
-    }
-    if (right(i) < last){
-        ret &= arr[i] <= arr[right(i)];
-        if (ret){
-            ret &= check_heap_invariant(right(i));
-        } else {
-            std::cout << "inv " << i << std::endl;
-            return false;
-        }
-    }
-    return ret;
-}
-
-void BinHeap2::print_heap(size_t i) {
-    std::cout << i << ": " <<arr[i];
-    if (left(i) < last){
-        std::cout << " l " << arr[left(i)];
-    }
-    if (right(i) < last){
-        std::cout << " r " << arr[right(i)];
-    }
-    std::cout << std::endl;
-    if (left(i) < last){
-        print_heap(left(i));
-    }
-    if (right(i) < last){
-        print_heap(right(i));
-    }
-}
-
-void BinHeap2::check(size_t i) {
-    if (i < last){
-        if (arr[i] > 999){
-            std::cout << "." << i << std::endl;
-        }
-        check(left(i));
-        check(right(i));
-    }
+void BinHeap2::allocate(size_t size) {
+    this->size = size;
+    size_t sz = (size + S - 1) / S * D;
+    size_t sp = sz + alignment;
+    ptr = new Key [sp];
+    void* a = (void*)ptr;
+    align(alignment, sz, a, sp);
+    arr = (Key*)a;
 }
 
 
