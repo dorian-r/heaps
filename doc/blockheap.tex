@@ -126,6 +126,34 @@ If the tree is filled block by blockwise and each block is filled layerwise then
 
 \section{Analysis}
 
-With the given formulas a binary heap using BHL can be implemented just like the standard binary heap implementation.
+With the given formulas a binary heap using BHL can be implemented just like the standard binary heap.
 
+The goal of BHL is to put subtrees of the binary heap into a single block in memory (e.g. a cache line in a CPU or a RAM page).
+Since blocks of memory usually have sizes that are a power of 2, we let each block begin at a power of two, i.e. a multiple of $D$.
+Thus we have to ensure that each block of the binary heap starts at the beginning of a memory block.
+
+Cache lines in most modern CPUs have a size of 64 bytes. If each key has 4 bytes we can use a 3-BHL layout. We then would have to ensure that the array in which the heap is stored is aligned to a cache line, i.e. its memory address is divisible by 64.
+
+\subsection{Tests}
+
+The following tests were done with multiple compilers for the reason that the optimization described above yielded huge performance increases in GCC 4.8.4 (pre-installed in Linux Mint 17.3) while on newer compilers (clang 3.6.0 was tested as well but the results were very similar to GCC 6.1.1) not so much, which I noticed only quite late.
+
+\begin{Tabular}{r | r | r | r | r | r | r}
+	\multicolumn{1}{c}{} & \multicolumn{2}{c}{Normal binary heap} & \multicolumn{2}{c}{Binary heap with 3-BHL} \\
+	$n$ & GCC 4.8.4 & GCC 6.1.1 & GCC 4.8.4 & GCC 6.1.1 \\\hline
+	$10^6$ & 142439730 & 133711790 & 179537408 & 148117049  \\
+	$10^7$ & 3086220360 & 1882807895  & 1866722589 & 1878903331  \\
+	$10^8$ & 60736413338 & 26945078895  & 26902074735 & 25765136025  \\
+	$10^9$ & 889389255072 & 350881140904  & 342073363689 & 337794208713 \\
+\end{Tabular}
+
+We can see that a very small benefit can be gained using BHL with a very large input on the newer compilers. Most interestingly, the performance difference on GCC 4.8.4 is quite high. It seems that newer compiler do some optimization greatly speeding up the normal binary heap implementation.
+
+\subsection{Model}
+
+Let $n$ be the number of elements in the heap, $h$ the height of the binary tree representing the heap. Let $D=2^{d+1}$ be the size of a memory block.
+
+Given a large enough $n$ we can assume for the binary heap that $i$, $parent(i)$ always lie in a different block. Then one \texttt{heapifyDown} operation would need $2h+1$ block accesses.
+
+If we now use $d$-BHL, we would only need $2\left\lfloor\frac{h}{d+1}\right\rfloor-1$ block accesses.
 \end{document}
