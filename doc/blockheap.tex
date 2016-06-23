@@ -10,7 +10,9 @@
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{tikz}
-\usetikzlibrary{shapes,fit}
+\usetikzlibrary{shapes,decorations.pathreplacing,positioning,bending,calc}
+%\usetikzlibrary{shapes.multipart}
+
 
 \begin{document}
 
@@ -26,34 +28,43 @@ I will first define the BHL structure and then analyse it in comparison to the s
 
 \section{Definition}
 
-The following illustration represents one block in the $d$-BHL structure (the number in the node refers to its position when saved in the array):
+The following illustration represents one block in the $d$-BHL structure (the number in the node refers to its position when saved in the array).
 
 \begin{tikzpicture}[level/.style={sibling distance=3cm/#1,level distance=1cm}]
 \node [rectangle,draw] (n0){0}
 	child {node [rectangle,draw] (n1) {1}
 		child {node{$\vdots$}
-			child {node [rectangle,draw] (n3) {$2^d-1$}}
-			child {node {} edge from parent[draw=none]}
+			child {node [rectangle,draw,left] (n3) {$2^d-1$}}
 		}
 		child {node{$\vdots$}}
 	}
 	child {node [rectangle,draw] (n2) {2}
 		child {node{$\vdots$}}
 		child {node{$\vdots$}
-			child {node {} edge from parent[draw=none]}
-			child {node [rectangle,draw] (n4) {$2^{d+1}-2$}}
+			child {node [rectangle,draw,right] (n4) {$2^{d+1}-2$}}
 		}
 	};
     
 \path (n3) -- (n4) node [midway] {$\cdots$};
+
+\coordinate (cd1) at ($(n4)+(1.5,0)$);
+\draw[<->,] 
+(cd1) -- (cd1|-n0.east) node [midway,fill=white] {$d$};
 \end{tikzpicture}
 
-In order to use the BHL structure for heaps of any size, we can make each of the $2^{d+1}$ children of leafs in a block root nodes of another block:
+Let $D=2^{d+1}$. In order to use the BHL structure for heaps of any size, we can make each of the $D$ children of leafs in a block root nodes of another block. Thus a $D$-ary tree is formed by the blocks.
 
 \begin{tikzpicture}[
-	leaf/.style={isosceles triangle,draw,shape border rotate=90,isosceles triangle stretches=true, minimum height=15mm,minimum width=25mm,inner sep=0,yshift={-20mm},font=\tiny}
+	level/.style={sibling distance=3cm/#1,level distance=1cm},
+	child anchor=north,parent anchor=south,
+	every text node part/.style={align=center},
+	nd/.style={isosceles triangle,draw,shape border rotate=90, isosceles triangle apex angle=60,inner sep=0,font=\tiny,yshift={-20mm},text width=2cm},
 ]
-\node[leaf] {$0\cdots 2^d+1 - 2$};
+\node[nd] {$0\ldots D-2$}
+	child{node[nd,left] {$D\ldots 2D-2$}}
+	child{node[nd,left] (a){$2D\ldots 3D-2$}}
+	child{node[nd,right] (b){$D^2\ldots D^2+D-2$}};
+\path (a) -- (b) node [midway] {$\cdots$};
 \end{tikzpicture}
 
 \end{document}
