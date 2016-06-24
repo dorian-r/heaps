@@ -155,5 +155,5 @@ Let $n$ be the number of elements in the heap, $h$ the height of the binary tree
 
 Given a large enough $n$ we can assume for the binary heap that $i$, $parent(i)$ always lie in a different block. Then one \texttt{heapifyDown} operation would need $2h+1$ block accesses.
 
-If we now use $d$-BHL, we would only need $2\left\lfloor\frac{h}{d+1}\right\rfloor-1$ block accesses.
+If we now use $d$-BHL, we will only need $2\left\lceil\frac{h}{d+1}\right\rceil-1$ block accesses.
 \end{document}
